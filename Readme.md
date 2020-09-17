@@ -1,7 +1,7 @@
-# Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
+﻿# Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алена Антиосова](https://up.htmlacademy.ru/javascript/21/user/1253733).
-* Наставник: `Неизвестно`.
+* Наставник: Антон Колотаев.
 
 ---
 
@@ -50,3 +50,4 @@ git clone SSH-адрес_вашего_форка
 
 [travis-image]: https://travis-ci.com/htmlacademy-javascript/1253733-keksobooking-21.svg?branch=master
 [travis-url]: https://travis-ci.com/htmlacademy-javascript/1253733-keksobooking-21
+
