@@ -9,7 +9,7 @@ const getRandomFromRange = (max, min) => {
 };
 
 const generateMock = () => {
-  const array = [];
+  const mocks = [];
 
   for (let i = 0; i < 8; i++) {
     const mockElement = {
@@ -34,31 +34,35 @@ const generateMock = () => {
         "y": getRandomFromRange(130, 630)
       }
     };
-    array.push(mockElement);
+    mocks.push(mockElement);
   }
 
-  return array;
+  return mocks;
 };
 
 
 const map = document.querySelector(`.map`);
 map.classList.remove(`map--faded`);
 
-const TemplateMapPin = document.querySelector(`#pin`);
-
-const renderMapPin = (array) => {
-  const mapPinElement = TemplateMapPin.cloneNode(true);
-  mapPinElement.querySelector(`map_pin.button`).textContent = array.location.x;
-  mapPinElement.querySelector(`map_pin.img.src`).textContent = array.author.avatar;
-  mapPinElement.querySelector(`map_pin.img.alt`).textContent = array.offer.title;
+const buildMapPin = (mocks, template) => {
+  const mapPinElement = template.cloneNode(true);
+  mapPinElement.querySelector(`map_pin.button`).textContent = mocks.location.x;
+  mapPinElement.querySelector(`map_pin.img.src`).textContent = mocks.author.avatar;
+  mapPinElement.querySelector(`map_pin.img.alt`).textContent = mocks.offer.title;
 
   return mapPinElement;
 };
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < array.length; i++) {
-  fragment.appendChild(renderMapPin(array[i]));
+const buildMapPins = (mocks) => {
+  const mapPinTemplate = document.querySelector(`#pin`)
+  mapPinTemplate.content.querySelector(`.map__pin`);
+  const mapPinsblock = document.querySelector(`.map__pins`);
+  const fragment = document.createDocumentFragment();
+
+  mocks.forEach((mocksItem) => {
+    const mapPin = buildMapPin(mapPinTemplate, mocksItem);
+    fragment.appendChild(mapPin)
+  });
 }
 
-const randerMapPins = document.querySelector(`.map__pins`);
-randerMapPins.appendChild(fragment);
+mapPinsblock.appendChild(fragment);
