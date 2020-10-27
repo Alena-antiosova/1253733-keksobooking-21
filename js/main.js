@@ -10,6 +10,7 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
+
 const getRandomFromRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -76,3 +77,69 @@ const buildMapPins = () => {
 };
 
 buildMapPins();
+
+map.classList.add(`map--faded`);
+const formInactive = document.querySelector(`.ad-form--disabled`);
+const form = document.querySelector(`.ad-form`);
+const filter = document.querySelector(`.map__filters`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+
+const formGetFieldset = () => {
+  for (let i = 0; i <= form.length; i++) {
+    const formFieldset = form.querySelectorAll(`fieldset`).disabled = false;
+  }
+};
+
+const filterGetFieldset = () => {
+  for (let i = 0; i <= filter.length; i++) {
+    const filterFieldset = filter.querySelectorAll(`fieldset`).disabled = false;
+  }
+};
+
+const mapPinActive = () => {
+  map.classList.remove(`map--faded`);
+  formInactive.classList.remove(`ad-form--disabled`);
+  formGetFieldset();
+  filterGetFieldset();
+};
+
+mapPinMain.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    evt.preventDefault();
+    mapPinActive();
+  }
+});
+
+mapPinMain.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    evt.preventDefault();
+    mapPinActive();
+  }
+});
+
+const roomNumber = form.querySelector(`#room_number`);
+const guestsNumber = form.querySelector(`#capacity`);
+
+const selectRoomsForGuests = () => {
+  roomNumber.setCustomValidity(``);
+  const rooms = parseInt(roomNumber.value, 10);
+  let guests = parseInt(guestsNumber.value, 10);
+  if (rooms === 1 && guests > 1) {
+    roomNumber.setCustomValidity(`1 комната только для 1 гостя`);
+  } else if (rooms === 2 && guests > 2) {
+    roomNumber.setCustomValidity(`2 комнаты только для 2 гостей или 1 гостя`);
+  } else if (rooms === 3 && guests > 3) {
+    roomNumber.setCustomValidity(`3 комнаты только для 3 гостей, 2 гостей или 1 гостя`);
+  } else if (rooms === 100 && guests > 0) {
+    roomNumber.setCustomValidity(`100 комнат не для гостей`);
+  }
+  roomNumber.reportValidity();
+};
+
+roomNumber.addEventListener(`change`, function () {
+  selectRoomsForGuests();
+});
+
+guestsNumber.addEventListener(`change`, function () {
+  selectRoomsForGuests();
+});
