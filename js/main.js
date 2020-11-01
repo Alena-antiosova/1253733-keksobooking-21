@@ -84,24 +84,30 @@ const form = document.querySelector(`.ad-form`);
 const filter = document.querySelector(`.map__filters`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
 
-const formGetFieldset = () => {
-  for (let i = 0; i <= form.length; i++) {
-    const formFieldset = form.querySelectorAll(`fieldset`).disabled = false;
-  }
-};
 
-const filterGetFieldset = () => {
-  for (let i = 0; i <= filter.length; i++) {
-    const filterFieldset = filter.querySelectorAll(`fieldset`).disabled = false;
-  }
-};
+const setFormStatus = (form, status) => {
+  const fields = form.children;
+  for (let i = 0; i < fields.length; i++) {
+    fields[i].disabled = status;
+  };
+}
+
+setFormStatus(form, true);
+setFormStatus(filter, true);
 
 const mapPinActive = () => {
   map.classList.remove(`map--faded`);
   formInactive.classList.remove(`ad-form--disabled`);
-  formGetFieldset();
-  filterGetFieldset();
+  setFormStatus(form, false);
+  setFormStatus(filter, false);
 };
+
+const onPinActive = (evt) => {
+  if (evt.button === 0 || evt.key === `Enter`) {
+    evt.preventDefault();
+    mapPinActive();
+  };
+}
 
 mapPinMain.addEventListener(`mousedown`, function (evt) {
   if (evt.button === 0) {
@@ -123,7 +129,7 @@ const guestsNumber = form.querySelector(`#capacity`);
 const selectRoomsForGuests = () => {
   roomNumber.setCustomValidity(``);
   const rooms = parseInt(roomNumber.value, 10);
-  let guests = parseInt(guestsNumber.value, 10);
+  const guests = parseInt(guestsNumber.value, 10);
   if (rooms === 1 && guests > 1) {
     roomNumber.setCustomValidity(`1 комната только для 1 гостя`);
   } else if (rooms === 2 && guests > 2) {
@@ -136,10 +142,6 @@ const selectRoomsForGuests = () => {
   roomNumber.reportValidity();
 };
 
-roomNumber.addEventListener(`change`, function () {
-  selectRoomsForGuests();
-});
+roomNumber.addEventListener(`change`, selectRoomsForGuests);
 
-guestsNumber.addEventListener(`change`, function () {
-  selectRoomsForGuests();
-});
+guestsNumber.addEventListener(`change`, selectRoomsForGuests);
