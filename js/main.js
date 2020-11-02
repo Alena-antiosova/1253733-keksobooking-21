@@ -11,6 +11,9 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
+const MAP_PIN_WIDHT = 65;
+const MAP_PIN_HEIGHT = 65;
+
 const getRandomFromRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -76,55 +79,56 @@ const buildMapPins = () => {
   mapPinsblock.appendChild(fragment);
 };
 
-buildMapPins();
 
-map.classList.add(`map--faded`);
-const formInactive = document.querySelector(`.ad-form--disabled`);
 const form = document.querySelector(`.ad-form`);
 const filter = document.querySelector(`.map__filters`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
+const roomNumber = form.querySelector(`#room_number`);
+const guestsNumber = form.querySelector(`#capacity`);
+const formAddress = form.querySelector(`#address`);
+
+const getMapPinSize = () => {
+  const mapPinX = Math.round(mapPinMain.style.left - MAP_PIN_WIDHT / 2);
+  const mapPinY = Math.round(mapPinMain.style.top - MAP_PIN_HEIGHT / 2);
+  formAddress.value = mapPinY;
+};
 
 
-const setFormStatus = (form, status) => {
+function setFormStatus(form, status) {
   const fields = form.children;
   for (let i = 0; i < fields.length; i++) {
     fields[i].disabled = status;
-  };
+  }
 }
 
-setFormStatus(form, true);
-setFormStatus(filter, true);
+const setInactivePage = () => {
+  map.classList.add(`map--faded`);
+  form.classList.add(`.ad-form--disabled`);
+  setFormStatus(form, true);
+  setFormStatus(filter, true);
+  getMapPinSize();
+};
 
-const mapPinActive = () => {
+setInactivePage();
+
+
+const setActivePage = () => {
   map.classList.remove(`map--faded`);
-  formInactive.classList.remove(`ad-form--disabled`);
+  form.classList.remove(`ad-form--disabled`);
   setFormStatus(form, false);
   setFormStatus(filter, false);
+  buildMapPins();
 };
 
 const onPinActive = (evt) => {
   if (evt.button === 0 || evt.key === `Enter`) {
     evt.preventDefault();
-    mapPinActive();
-  };
-}
-
-mapPinMain.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
-    evt.preventDefault();
-    mapPinActive();
+    setActivePage();
   }
-});
+};
 
-mapPinMain.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    evt.preventDefault();
-    mapPinActive();
-  }
-});
-
-const roomNumber = form.querySelector(`#room_number`);
-const guestsNumber = form.querySelector(`#capacity`);
+mapPinMain.addEventListener(`mousedown`, onPinActive);
+mapPinMain.addEventListener(`keydown`, onPinActive);
 
 const selectRoomsForGuests = () => {
   roomNumber.setCustomValidity(``);
