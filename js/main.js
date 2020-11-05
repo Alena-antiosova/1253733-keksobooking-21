@@ -10,6 +10,10 @@ const PHOTOS = [
   `http://o0.github.io/assets/images/tokyo/hotel2.jpg`,
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
+
+const MAP_PIN_WIDHT = 65;
+const MAP_PIN_HEIGHT = 65;
+
 const getRandomFromRange = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -75,4 +79,74 @@ const buildMapPins = () => {
   mapPinsblock.appendChild(fragment);
 };
 
-buildMapPins();
+
+const form = document.querySelector(`.ad-form`);
+const filter = document.querySelector(`.map__filters`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+const roomNumber = form.querySelector(`#room_number`);
+const guestsNumber = form.querySelector(`#capacity`);
+const formAddress = form.querySelector(`#address`);
+
+const getMapPinSize = () => {
+  const mapPinX = Math.round(MAP_PIN_WIDHT / 2);
+  const mapPinY = Math.round(MAP_PIN_HEIGHT / 2);
+  return (parseInt(mapPinMain.style.left, 10)) - `${mapPinX}` + (parseInt(mapPinMain.style.top, 10)) - `${mapPinY}`;
+};
+
+formAddress.value = getMapPinSize();
+
+function setFormStatus(status) {
+  const fields = form.children;
+  for (let i = 0; i < fields.length; i++) {
+    fields[i].disabled = status;
+  }
+}
+
+const setInactivePage = () => {
+  map.classList.add(`map--faded`);
+  form.classList.add(`ad-form--disabled`);
+  setFormStatus(form, true);
+  setFormStatus(filter, true);
+  getMapPinSize();
+};
+
+setInactivePage();
+
+
+const setActivePage = () => {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+  setFormStatus(form, false);
+  setFormStatus(filter, false);
+  buildMapPins();
+};
+
+const onPinActive = (evt) => {
+  if (evt.button === 0 || evt.key === `Enter`) {
+    evt.preventDefault();
+    setActivePage();
+  }
+};
+
+mapPinMain.addEventListener(`mousedown`, onPinActive);
+mapPinMain.addEventListener(`keydown`, onPinActive);
+
+const selectRoomsForGuests = () => {
+  roomNumber.setCustomValidity(``);
+  const rooms = parseInt(roomNumber.value, 10);
+  const guests = parseInt(guestsNumber.value, 10);
+  if (rooms === 1 && guests > 1) {
+    roomNumber.setCustomValidity(`1 комната только для 1 гостя`);
+  } else if (rooms === 2 && guests > 2) {
+    roomNumber.setCustomValidity(`2 комнаты только для 2 гостей или 1 гостя`);
+  } else if (rooms === 3 && guests > 3) {
+    roomNumber.setCustomValidity(`3 комнаты только для 3 гостей, 2 гостей или 1 гостя`);
+  } else if (rooms === 100 && guests > 0) {
+    roomNumber.setCustomValidity(`100 комнат не для гостей`);
+  }
+  roomNumber.reportValidity();
+};
+
+roomNumber.addEventListener(`change`, selectRoomsForGuests);
+
+guestsNumber.addEventListener(`change`, selectRoomsForGuests);
