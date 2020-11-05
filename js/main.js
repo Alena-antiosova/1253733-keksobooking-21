@@ -88,13 +88,14 @@ const guestsNumber = form.querySelector(`#capacity`);
 const formAddress = form.querySelector(`#address`);
 
 const getMapPinSize = () => {
-  const mapPinX = Math.round(mapPinMain.style.left - MAP_PIN_WIDHT / 2);
-  const mapPinY = Math.round(mapPinMain.style.top - MAP_PIN_HEIGHT / 2);
-  formAddress.value = mapPinY;
+  const mapPinX = Math.round(MAP_PIN_WIDHT / 2);
+  const mapPinY = Math.round(MAP_PIN_HEIGHT / 2);
+  return (parseInt(mapPinMain.style.left, 10)) - `${mapPinX}` + (parseInt(mapPinMain.style.top, 10)) - `${mapPinY}`;
 };
 
+formAddress.value = getMapPinSize();
 
-function setFormStatus(form, status) {
+function setFormStatus(status) {
   const fields = form.children;
   for (let i = 0; i < fields.length; i++) {
     fields[i].disabled = status;
@@ -103,7 +104,7 @@ function setFormStatus(form, status) {
 
 const setInactivePage = () => {
   map.classList.add(`map--faded`);
-  form.classList.add(`.ad-form--disabled`);
+  form.classList.add(`ad-form--disabled`);
   setFormStatus(form, true);
   setFormStatus(filter, true);
   getMapPinSize();
