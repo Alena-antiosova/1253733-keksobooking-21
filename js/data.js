@@ -47,6 +47,5 @@
 
   window.data = {
     generateMock,
-    mocks,
   };
 })();

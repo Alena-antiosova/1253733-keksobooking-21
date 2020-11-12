@@ -12,11 +12,11 @@
     return mapPinElement;
   };
 
-  const buildMapPins = () => {
+  const buildMapPins = (data) => {
     const mapPinsblock = document.querySelector(`.map__pins`);
     const fragment = document.createDocumentFragment();
 
-    window.data.mocks.forEach((mockItem) => {
+    data.forEach((mockItem) => {
       const mapPin = buildMapPin(mockItem);
       fragment.appendChild(mapPin);
     });

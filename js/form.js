@@ -8,6 +8,7 @@
   const formAddress = form.querySelector(`#address`);
   const MAP_PIN_WIDHT = 65;
   const MAP_PIN_HEIGHT = 65;
+  const URL_GET_DATE = `https://21.javascript.pages.academy/keksobooking/data23`;
 
 
   const getMapPinSize = () => {
@@ -29,12 +30,24 @@
   setInactivePage();
 
 
+  const onSuccess = (response) => {
+    window.pin.buildMapPins(response);
+  };
+
+  const onError = (error) => {
+    console.log(`error`, error);
+  };
+
   const setActivePage = () => {
     window.map.map.classList.remove(`map--faded`);
     form.classList.remove(`ad-form--disabled`);
     window.main.setFormStatus(form, false);
     window.main.setFormStatus(filter, false);
-    window.pin.buildMapPins();
+    try {
+      window.load.makeGetRequest(URL_GET_DATE, onSuccess, onError);
+    } catch (error) {
+      console.log(`error1`, error);
+    }
   };
 
   const onPinActive = (evt) => {
